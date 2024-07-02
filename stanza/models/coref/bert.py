@@ -69,9 +69,10 @@ def load_bert(config: Config) -> Tuple[AutoModel, AutoTokenizer]:
     if tokenizer_kwargs:
         logger.debug(f"Using tokenizer kwargs: {tokenizer_kwargs}")
     tokenizer = AutoTokenizer.from_pretrained(config.bert_model,
-                                              **tokenizer_kwargs)
+                                              **tokenizer_kwargs,
+                                              local_files_only=True)
 
-    model = AutoModel.from_pretrained(config.bert_model).to(config.device)
+    model = AutoModel.from_pretrained(config.bert_model, local_files_only=True).to(config.device)
 
     logger.debug("Bert successfully loaded.")
 
