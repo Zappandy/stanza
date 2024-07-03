@@ -66,13 +66,16 @@ def load_bert(config: Config) -> Tuple[AutoModel, AutoTokenizer]:
 
     base_bert_name = config.bert_model.split("/")[-1]
     tokenizer_kwargs = config.tokenizer_kwargs.get(base_bert_name, {})
+    cache_dir = '/gpfs/projects/bsc32/bsc927078/language_models/hf_cache/huggingface/hub'
     if tokenizer_kwargs:
         logger.debug(f"Using tokenizer kwargs: {tokenizer_kwargs}")
     tokenizer = AutoTokenizer.from_pretrained(config.bert_model,
                                               **tokenizer_kwargs,
-                                              local_files_only=True)
+                                              local_files_only=True,
+                                              resume_download=False,
+                                              cache_dir=cache_dir)
 
-    model = AutoModel.from_pretrained(config.bert_model, local_files_only=True).to(config.device)
+    model = AutoModel.from_pretrained(config.bert_model, resume_download=False, local_files_only=True, cache_dir=cache_dir).to(config.device)
 
     logger.debug("Bert successfully loaded.")
 
